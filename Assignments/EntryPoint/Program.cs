@@ -12,29 +12,41 @@ namespace EntryPoint
 		[STAThread]
 		static void Main()
 		{
-			var fullscreen = false;
-			Console.WriteLine("Which assignment shall run next? (1, 2, 3, 4, or q for quit)", "Choose assignment");
+			const bool fullscreen = false;
+			Console.WriteLine("Which assignment shall run next? (1, 2, 3, 4, or q for quit)");
+
 			var level = Console.ReadLine();
-			if (level == "1")
-			{
-				var game = VirtualCity.RunAssignment1(SortSpecialBuildingsByDistance, fullscreen);
-				game.Run();
-			}
-			else if (level == "2")
-			{
-				var game = VirtualCity.RunAssignment2(FindSpecialBuildingsWithinDistanceFromHouse, fullscreen);
-				game.Run();
-			}
-			else if (level == "3")
-			{
-				var game = VirtualCity.RunAssignment3(FindRoute, fullscreen);
-				game.Run();
-			}
-			else if (level == "4")
-			{
-				var game = VirtualCity.RunAssignment4(FindRoutesToAll, fullscreen);
-				game.Run();
-			}
+
+		    switch (level)
+		    {
+		        case "1":
+		        {
+		            var game = VirtualCity.RunAssignment1(SortSpecialBuildingsByDistance, fullscreen);
+		            game.Run();
+		        }
+		            break;
+
+		        case "2":
+		        {
+		            var game = VirtualCity.RunAssignment2(FindSpecialBuildingsWithinDistanceFromHouse, fullscreen);
+		            game.Run();
+		        }
+		            break;
+
+		        case "3":
+		        {
+		            var game = VirtualCity.RunAssignment3(FindRoute, fullscreen);
+		            game.Run();
+		        }
+		            break;
+
+		        case "4":
+		        {
+		            var game = VirtualCity.RunAssignment4(FindRoutesToAll, fullscreen);
+		            game.Run();
+		        }
+		            break;
+		    }
 		}
 
 		private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)

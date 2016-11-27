@@ -17,7 +17,7 @@ namespace EntryPoint
 
 	    public IEnumerable<Vector2> MergeSort(int first, int last)
 	    {
-		    if (last - first < 1)
+		    if (last == first)
 		    {
 		        return null;
 		    }
@@ -31,23 +31,21 @@ namespace EntryPoint
 	        return this.Array;
 	    }
 
-	    private IEnumerable<Vector2> Merge(int first, int last, int middle)
+	    private void Merge(int f, int last, int m)
 	    {
-	        int f = first;
-	        int m = middle;
+	        m++;
 
-	        while (f <= m && m + 1 <= last) {
-
-	            if (this.Distance(f) >= this.Distance(m + 1))
+	        while (f <= m && m <= last)
+	        {
+	            // Sort by distance
+	            if (this.Distance(f) >= this.Distance(m))
 	            {
-	                this.Switch(m + 1, f);
+	                this.Switch(m, f);
 	                m++;
 	            }
 
 	            f++;
 	        }
-
-	        return this.Array;
 	    }
 
 	    public float Distance(int index)
