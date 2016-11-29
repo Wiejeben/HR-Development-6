@@ -53,21 +53,18 @@ namespace EntryPoint
 		{
 		    Vector2[] array = specialBuildings.ToArray();
 		    ExerciseOne exercise = new ExerciseOne(house, array);
+		    Vector2[] sortedBuildings = exercise.MergeSort(0, array.Length - 1);
 
-		    IEnumerable<Vector2> result = exercise.MergeSort(0, array.Length - 1);
+//		    Vector2[] sortedBuildings = specialBuildings.OrderBy(v => Vector2.Distance(v, house)).ToArray();
 
-		    // Output distance
-		    int i = 0;
-		    foreach (Vector2 item in result)
+		    Console.WriteLine("Sorted distances:");
+		    for (int i = 0; i < sortedBuildings.Length - 1; i++)
 		    {
+//		        Console.WriteLine(Vector2.Distance(sortedBuildings[i], house));
 		        Console.WriteLine(exercise.Distance(i));
-
-		        i++;
 		    }
 
-		    return result;
-
-//			return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
+		    return sortedBuildings;
 		}
 
 		private static IEnumerable<IEnumerable<Vector2>> FindSpecialBuildingsWithinDistanceFromHouse(
