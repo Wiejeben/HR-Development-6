@@ -66,7 +66,11 @@ namespace EntryPoint
 	    public void InsertBefore(int from, int to)
 	    {
 	        Vector2 temp = this.Positions[to];
+
+	        // Shift array
 	        Array.Copy(this.Positions, from, this.Positions, from + 1, to - from);
+
+	        // Put back variable at correct location
 	        this.Positions[from] = temp;
 	    }
 	}
