@@ -51,11 +51,11 @@ namespace EntryPoint
 
 		private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
 		{
-		    Vector2[] array = specialBuildings.ToArray();
-		    ExerciseOne exercise = new ExerciseOne(house, array);
-		    Vector2[] sortedBuildings = exercise.MergeSort(0, array.Length - 1);
+		    Vector2[] buildings = specialBuildings.ToArray();
+		    ExerciseOne exercise = new ExerciseOne(house, buildings);
+		    Vector2[] sortedBuildings = exercise.MergeSort(0, buildings.Length - 1);
 
-//		    Vector2[] sortedBuildings = specialBuildings.OrderBy(v => Vector2.Distance(v, house)).ToArray();
+//		    Vector2[] sortedBuildings = buildings.OrderBy(v => Vector2.Distance(v, house)).ToArray();
 
 		    Console.WriteLine("Sorted distances:");
 		    for (int i = 0; i < sortedBuildings.Length - 1; i++)
