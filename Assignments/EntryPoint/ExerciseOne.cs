@@ -18,18 +18,18 @@ namespace EntryPoint
 	    public Vector2[] MergeSort(int left, int right)
 	    {
 	        // Prevent merging itself
-		    if (left == right)
-		    {
-		        return null;
-		    }
+		if (left == right)
+		{
+		   return null;
+		}
 
 	        int middle = (left + right) / 2;
 
 	        // Left to middle
-		    this.MergeSort(left, middle);
+		this.MergeSort(left, middle);
 
 	        // Middle + 1 to right
-		    this.MergeSort(middle + 1, right);
+		this.MergeSort(middle + 1, right);
 
 	        this.Merge(left, right, middle);
 
@@ -58,9 +58,9 @@ namespace EntryPoint
 	        Vector2 value2 = this.Center;
 
 	        float num1 = value1.X - value2.X;
-            float num2 = value1.Y - value2.Y;
+            	float num2 = value1.Y - value2.Y;
 
-            return (float) Math.Sqrt(num1 * num1 + num2 * num2);
+            	return (float) Math.Sqrt(num1 * num1 + num2 * num2);
 	    }
 
 	    public void InsertBefore(int from, int to)
