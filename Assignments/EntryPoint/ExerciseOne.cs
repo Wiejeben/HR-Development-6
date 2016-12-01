@@ -6,72 +6,72 @@ namespace EntryPoint
 {
 	public class ExerciseOne
 	{
-	    public Vector2 Center;
-	    public Vector2[] Positions;
+		public Vector2 Center;
+		public Vector2[] Positions;
 
-	    public ExerciseOne(Vector2 center, Vector2[] list)
-	    {
-	        this.Center = center;
-	        this.Positions = list;
-	    }
-
-	    public Vector2[] MergeSort(int left, int right)
-	    {
-	        // Prevent merging itself
-		if (left == right)
+		public ExerciseOne(Vector2 center, Vector2[] list)
 		{
-		   return null;
+			this.Center = center;
+			this.Positions = list;
 		}
 
-	        int middle = (left + right) / 2;
+		public Vector2[] MergeSort(int left, int right)
+		{
+			// Prevent merging itself
+			if (left == right)
+			{
+			   return null;
+			}
 
-	        // Left to middle
-		this.MergeSort(left, middle);
+			int middle = (left + right) / 2;
 
-	        // Middle + 1 to right
-		this.MergeSort(middle + 1, right);
+			// Left to middle
+			this.MergeSort(left, middle);
 
-	        this.Merge(left, right, middle);
+			// Middle + 1 to right
+			this.MergeSort(middle + 1, right);
 
-	        return this.Positions;
-	    }
+			this.Merge(left, right, middle);
 
-	    private void Merge(int left, int right, int middle)
-	    {
-	        middle++;
+			return this.Positions;
+		}
 
-	        while (left <= middle && middle <= right) {
+		private void Merge(int left, int right, int middle)
+		{
+			middle++;
 
-	            if (this.Distance(left) >= this.Distance(middle))
-	            {
-	                this.InsertBefore(left, middle);
-	                middle++;
-	            }
+			while (left <= middle && middle <= right) {
 
-	            left++;
-	        }
-	    }
+				if (this.Distance(left) >= this.Distance(middle))
+				{
+					this.InsertBefore(left, middle);
+					middle++;
+				}
 
-	    public float Distance(int index)
-	    {
-	        Vector2 value1 = this.Positions[index];
-	        Vector2 value2 = this.Center;
+				left++;
+			}
+		}
 
-	        float num1 = value1.X - value2.X;
-            	float num2 = value1.Y - value2.Y;
+		public float Distance(int index)
+		{
+			Vector2 value1 = this.Positions[index];
+			Vector2 value2 = this.Center;
 
-            	return (float) Math.Sqrt(num1 * num1 + num2 * num2);
-	    }
+			float num1 = value1.X - value2.X;
+			float num2 = value1.Y - value2.Y;
 
-	    public void InsertBefore(int from, int to)
-	    {
-	        Vector2 temp = this.Positions[to];
+			return (float) Math.Sqrt(num1 * num1 + num2 * num2);
+		}
 
-	        // Shift array
-	        Array.Copy(this.Positions, from, this.Positions, from + 1, to - from);
+		public void InsertBefore(int from, int to)
+		{
+			Vector2 temp = this.Positions[to];
 
-	        // Put back variable at correct location
-	        this.Positions[from] = temp;
-	    }
+			// Shift array
+			Array.Copy(this.Positions, from, this.Positions, from + 1, to - from);
+
+			// Put back variable at correct location
+			this.Positions[from] = temp;
+		}
 	}
 }
