@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace EntryPoint
@@ -40,8 +39,8 @@ namespace EntryPoint
 		{
 			middle++;
 
-			while (left <= middle && middle <= right) {
-
+			while (left <= middle && middle <= right)
+			{
 				if (this.Distance(left) >= this.Distance(middle))
 				{
 					this.InsertBefore(left, middle);
