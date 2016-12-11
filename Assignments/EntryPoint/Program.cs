@@ -49,6 +49,7 @@ namespace EntryPoint
 		    }
 		}
 
+	    // ExerciseOne
 		private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
 		{
 		    Vector2[] buildings = specialBuildings.ToArray();
@@ -67,10 +68,15 @@ namespace EntryPoint
 		    return sortedBuildings;
 		}
 
+	    // ExerciseTwo
 		private static IEnumerable<IEnumerable<Vector2>> FindSpecialBuildingsWithinDistanceFromHouse(
 		  IEnumerable<Vector2> specialBuildings,
 		  IEnumerable<Tuple<Vector2, float>> housesAndDistances)
 		{
+		    ExerciseTwo exercice = new ExerciseTwo(specialBuildings, housesAndDistances);
+
+		    return exercice.Run();
+
 			return
 				from h in housesAndDistances
 				select

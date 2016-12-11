@@ -53,14 +53,16 @@ namespace EntryPoint
 
 		public float Distance(int index)
 		{
-			Vector2 value1 = this.Positions[index];
-			Vector2 value2 = this.Center;
-
-			float num1 = value1.X - value2.X;
-			float num2 = value1.Y - value2.Y;
-
-			return (float) Math.Sqrt(num1 * num1 + num2 * num2);
+		    return ExerciseOne.CalcDistance(this.Positions[index], this.Center);
 		}
+
+	    public static float CalcDistance(Vector2 value1, Vector2 value2)
+	    {
+	        float num1 = value1.X - value2.X;
+	        float num2 = value1.Y - value2.Y;
+
+	        return (float) Math.Sqrt(num1 * num1 + num2 * num2);
+	    }
 
 		public void InsertBefore(int from, int to)
 		{
