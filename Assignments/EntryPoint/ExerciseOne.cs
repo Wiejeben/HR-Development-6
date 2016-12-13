@@ -3,18 +3,23 @@ using Microsoft.Xna.Framework;
 
 namespace EntryPoint
 {
-	public class ExerciseOne
+	public class ExerciseOne<T, TK>
 	{
-		public Vector2 Center;
-		public Vector2[] Positions;
+		public T[] Positions;
+	    public Func<T, TK> ValueValculator;
 
-		public ExerciseOne(Vector2 center, Vector2[] list)
+		public ExerciseOne(T[] list)
 		{
-			this.Center = center;
 			this.Positions = list;
 		}
 
-		public Vector2[] MergeSort(int left, int right)
+	    public T[] Sort(Func<T, TK> valueCalculator)
+	    {
+	        this.ValueValculator = valueCalculator;
+	        return this.MergeSort(0, this.Positions.Length - 1);
+	    }
+
+		private T[] MergeSort(int left, int right)
 		{
 			// Prevent merging itself
 			if (left == right)
@@ -41,7 +46,14 @@ namespace EntryPoint
 
 			while (left <= middle && middle <= right)
 			{
-				if (this.Distance(left) >= this.Distance(middle))
+			    var leftSide = this.ValueValculator(this.Positions[left]) as IComparable;
+
+			    if (leftSide == null) {
+			        throw new NotSupportedException();
+			    }
+
+			    // left >= middle
+			    if (leftSide.CompareTo(this.ValueValculator(this.Positions[middle])) >= 0)
 				{
 					this.InsertBefore(left, middle);
 					middle++;
@@ -51,12 +63,7 @@ namespace EntryPoint
 			}
 		}
 
-		public float Distance(int index)
-		{
-		    return ExerciseOne.CalcDistance(this.Positions[index], this.Center);
-		}
-
-	    public static float CalcDistance(Vector2 value1, Vector2 value2)
+	    public static float Distance(Vector2 value1, Vector2 value2)
 	    {
 	        float num1 = value1.X - value2.X;
 	        float num2 = value1.Y - value2.Y;
@@ -64,9 +71,9 @@ namespace EntryPoint
 	        return (float) Math.Sqrt(num1 * num1 + num2 * num2);
 	    }
 
-		public void InsertBefore(int from, int to)
+		private void InsertBefore(int from, int to)
 		{
-			Vector2 temp = this.Positions[to];
+			T temp = this.Positions[to];
 
 			// Shift array
 			Array.Copy(this.Positions, from, this.Positions, from + 1, to - from);

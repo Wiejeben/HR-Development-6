@@ -53,17 +53,14 @@ namespace EntryPoint
 		private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
 		{
 		    Vector2[] buildings = specialBuildings.ToArray();
-		    ExerciseOne exercise = new ExerciseOne(house, buildings);
-		    Vector2[] sortedBuildings = exercise.MergeSort(0, buildings.Length - 1);
+		    // ReSharper disable once JoinDeclarationAndInitializer
+		    Vector2[] sortedBuildings;
 
-//		    Vector2[] sortedBuildings = buildings.OrderBy(v => Vector2.Distance(v, house)).ToArray();
+		    // Own implementation
+		    sortedBuildings = new ExerciseOne<Vector2, float>(buildings).Sort(v => ExerciseOne<Vector2, float>.Distance(v, house));
 
-		    Console.WriteLine("Sorted distances:");
-		    for (int i = 0; i < sortedBuildings.Length - 1; i++)
-		    {
-//		        Console.WriteLine(Vector2.Distance(sortedBuildings[i], house));
-		        Console.WriteLine(exercise.Distance(i));
-		    }
+		    // Old implementation
+//		    sortedBuildings = buildings.OrderBy(v => Vector2.Distance(v, house)).ToArray();
 
 		    return sortedBuildings;
 		}

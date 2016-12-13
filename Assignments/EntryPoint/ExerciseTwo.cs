@@ -28,7 +28,7 @@ namespace EntryPoint
 
                 foreach (Vector2 specialBuilding in this.SpecialBuildings)
                 {
-                    if (ExerciseOne.CalcDistance(center, specialBuilding) <= distance)
+                    if (ExerciseOne<Vector2, float>.Distance(center, specialBuilding) <= distance)
                     {
                         result.Add(specialBuilding);
                     }
