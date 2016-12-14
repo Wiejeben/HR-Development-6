@@ -8,7 +8,7 @@ namespace EntryPoint
 #if WINDOWS || LINUX
 	public static class Program
 	{
-		
+
 		[STAThread]
 		static void Main()
 		{
@@ -57,7 +57,7 @@ namespace EntryPoint
 		    Vector2[] sortedBuildings;
 
 		    // Own implementation
-		    sortedBuildings = new ExerciseOne<Vector2, float>(buildings).Sort(v => ExerciseOne<Vector2, float>.Distance(v, house));
+		    sortedBuildings = new ExerciseOne<Vector2>(buildings).Sort((left, middle) => ExerciseOne.Distance(left, house) >= ExerciseOne.Distance(middle, house));
 
 		    // Old implementation
 //		    sortedBuildings = buildings.OrderBy(v => Vector2.Distance(v, house)).ToArray();

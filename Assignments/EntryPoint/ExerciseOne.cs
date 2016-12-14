@@ -1,85 +1,82 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿    using System;
+    using Microsoft.Xna.Framework;
 
-namespace EntryPoint
-{
-	public class ExerciseOne<T, TK>
-	{
-		public T[] Positions;
-	    public Func<T, TK> ValueValculator;
+    namespace EntryPoint
+    {
+        public class ExerciseOne
+        {
+            public static float Distance(Vector2 value1, Vector2 value2)
+            {
+                float num1 = value1.X - value2.X;
+                float num2 = value1.Y - value2.Y;
 
-		public ExerciseOne(T[] list)
-		{
-			this.Positions = list;
-		}
+                return (float) Math.Sqrt(num1 * num1 + num2 * num2);
+            }
+        }
 
-	    public T[] Sort(Func<T, TK> valueCalculator)
-	    {
-	        this.ValueValculator = valueCalculator;
-	        return this.MergeSort(0, this.Positions.Length - 1);
-	    }
+        public class ExerciseOne<T> : ExerciseOne
+        {
+            public T[] Values;
+            public Func<T, T, bool> ValueValculator;
 
-		private T[] MergeSort(int left, int right)
-		{
-			// Prevent merging itself
-			if (left == right)
-			{
-			   return null;
-			}
+            public ExerciseOne(T[] list)
+            {
+                this.Values = list;
+            }
 
-			int middle = (left + right) / 2;
+            public T[] Sort(Func<T, T, bool> valueCalculator)
+            {
+                this.ValueValculator = valueCalculator;
+                return this.MergeSort(0, this.Values.Length - 1);
+            }
 
-			// Left to middle
-			this.MergeSort(left, middle);
+            private T[] MergeSort(int left, int right)
+            {
+                // Prevent merging itself
+                if (left == right)
+                {
+                   return null;
+                }
 
-			// Middle + 1 to right
-			this.MergeSort(middle + 1, right);
+                int middle = (left + right) / 2;
 
-			this.Merge(left, right, middle);
+                // Left to middle
+                this.MergeSort(left, middle);
 
-			return this.Positions;
-		}
+                // Middle + 1 to right
+                this.MergeSort(middle + 1, right);
 
-		private void Merge(int left, int right, int middle)
-		{
-			middle++;
+                this.Merge(left, right, middle);
 
-			while (left <= middle && middle <= right)
-			{
-			    var leftSide = this.ValueValculator(this.Positions[left]) as IComparable;
+                return this.Values;
+            }
 
-			    if (leftSide == null) {
-			        throw new NotSupportedException();
-			    }
+            private void Merge(int left, int right, int middle)
+            {
+                middle++;
 
-			    // left >= middle
-			    if (leftSide.CompareTo(this.ValueValculator(this.Positions[middle])) >= 0)
-				{
-					this.InsertBefore(left, middle);
-					middle++;
-				}
+                while (left <= middle && middle <= right)
+                {
+                    // left >= middle
+                    if (this.ValueValculator(this.Values[left], this.Values[middle]))
+                    {
+                        this.InsertBefore(left, middle);
+                        middle++;
+                    }
 
-				left++;
-			}
-		}
+                    left++;
+                }
+            }
 
-	    public static float Distance(Vector2 value1, Vector2 value2)
-	    {
-	        float num1 = value1.X - value2.X;
-	        float num2 = value1.Y - value2.Y;
+            private void InsertBefore(int from, int to)
+            {
+                T temp = this.Values[to];
 
-	        return (float) Math.Sqrt(num1 * num1 + num2 * num2);
-	    }
+                // Shift array
+                Array.Copy(this.Values, from, this.Values, from + 1, to - from);
 
-		private void InsertBefore(int from, int to)
-		{
-			T temp = this.Positions[to];
-
-			// Shift array
-			Array.Copy(this.Positions, from, this.Positions, from + 1, to - from);
-
-			// Put back variable at correct location
-			this.Positions[from] = temp;
-		}
-	}
-}
+                // Put back variable at correct location
+                this.Values[from] = temp;
+            }
+        }
+    }
