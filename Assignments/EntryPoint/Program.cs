@@ -52,15 +52,7 @@ namespace EntryPoint
 	    // ExerciseOne
 		private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
 		{
-		    Vector2[] buildings = specialBuildings.ToArray();
-		    // ReSharper disable once JoinDeclarationAndInitializer
-		    Vector2[] sortedBuildings;
-
-		    // Own implementation
-		    sortedBuildings = new ExerciseOne<Vector2>(buildings).Sort((left, middle) => ExerciseOne.Distance(left, house) >= ExerciseOne.Distance(middle, house));
-
-		    // Old implementation
-//		    sortedBuildings = buildings.OrderBy(v => Vector2.Distance(v, house)).ToArray();
+		    Vector2[] sortedBuildings = new ExerciseOne<Vector2>(specialBuildings.ToArray()).Sort((left, middle) => ExerciseOne.Distance(left, house) >= ExerciseOne.Distance(middle, house));
 
 		    return sortedBuildings;
 		}
@@ -73,13 +65,6 @@ namespace EntryPoint
 		    ExerciseTwo exercice = new ExerciseTwo(specialBuildings, housesAndDistances);
 
 		    return exercice.Run();
-
-			return
-				from h in housesAndDistances
-				select
-				  from s in specialBuildings
-				  where Vector2.Distance(h.Item1, s) <= h.Item2
-				  select s;
 		}
 
 		private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding,

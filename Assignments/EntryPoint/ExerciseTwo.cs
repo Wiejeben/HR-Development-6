@@ -10,34 +10,26 @@ namespace EntryPoint
         public KDNode Left { get; set; }
         public KDNode Right { get; set; }
         public Vector2 Value { get; set; }
+        public int Depth { get; set; }
+        public bool IsLeaf => this.Left == null && this.Right == null;
 
         public KDNode(Vector2 value)
         {
             this.Value = value;
         }
 
-        // Shuffle array to make tree more realistic
-        public static Vector2[] Shuffle(Vector2[] source)
+        public static KDNode Generate(Vector2[] locations)
         {
-            Random rnd = new Random();
-            return source.OrderBy(item => rnd.Next()).ToArray();
-        }
+            // Median as center
+            KDNode tree = new KDNode(locations[locations.Length / 2]);
 
-        public static void Generate(Vector2[] locations)
-        {
-            KDNode tree = null;
-            foreach (Vector2 location in KDNode.Shuffle(locations))
+            // Build tree
+            foreach (Vector2 location in locations)
             {
-                if (tree == null)
-                {
-                    tree = KDNode.Insert(location, tree, 0);
-                    continue;
-                }
-
                 KDNode.Insert(location, tree, 0);
             }
 
-            Console.WriteLine(tree);
+            return tree;
         }
 
         public static KDNode Insert(Vector2 vector, KDNode node, int depth)
@@ -54,21 +46,27 @@ namespace EntryPoint
                 return node;
             }
 
+            // Even depth
             var value1 = vector.X;
             var value2 = node.Value.X;
 
+            // Odd depth
             if (depth % 2 == 1)
             {
                 value1 = vector.Y;
                 value2 = node.Value.Y;
             }
 
-            if (value1 <= value2)
+            node.Depth = depth;
+
+            if (value1 < value2)
             {
+                // Left or equal
                 node.Left = KDNode.Insert(vector, node.Left, depth + 1);
             }
             else
             {
+                // Larger or equal
                 node.Right = KDNode.Insert(vector, node.Right, depth + 1);
             }
 
@@ -94,7 +92,7 @@ namespace EntryPoint
 
         public List<List<Vector2>> Run()
         {
-            KDNode.Generate(this.SpecialBuildings.ToArray());
+            var tree = KDNode.Generate(this.SpecialBuildings.ToArray());
 
             var results = new List<List<Vector2>>();
 
