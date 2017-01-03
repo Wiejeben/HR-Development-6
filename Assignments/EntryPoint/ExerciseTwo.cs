@@ -5,6 +5,27 @@ using Microsoft.Xna.Framework;
 
 namespace EntryPoint
 {
+    public class ExerciseTwo
+    {
+        public List<Vector2> SpecialBuildings { get; }
+        public List<Tuple<Vector2, float>> HousesAndDistances { get; }
+
+        public ExerciseTwo(IEnumerable<Vector2> specialBuildings, IEnumerable<Tuple<Vector2, float>> housesAndDistances)
+        {
+            this.SpecialBuildings = specialBuildings.ToList();
+            this.HousesAndDistances = housesAndDistances.ToList();
+        }
+
+        public List<List<Vector2>> Run()
+        {
+            var tree = new KdTree(this.SpecialBuildings);
+
+            // TODO: Implement range search
+
+            return new List<List<Vector2>>();
+        }
+    }
+
     public class KdTree
     {
         public KdNode Root { get; }
@@ -86,28 +107,6 @@ namespace EntryPoint
         public override string ToString()
         {
             return this.Value.ToString();
-        }
-    }
-
-    public class ExerciseTwo
-    {
-        public List<Vector2> SpecialBuildings { get; set; }
-        public List<Tuple<Vector2, float>> HousesAndDistances { get; set; }
-
-        public ExerciseTwo(IEnumerable<Vector2> specialBuildings, IEnumerable<Tuple<Vector2, float>> housesAndDistances)
-        {
-            this.SpecialBuildings = specialBuildings.ToList();
-            this.HousesAndDistances = housesAndDistances.ToList();
-        }
-
-        public List<List<Vector2>> Run()
-        {
-            var tree = new KdTree(this.SpecialBuildings);
-            Console.WriteLine("Hello World!");
-
-            var results = new List<List<Vector2>>();
-
-            return results;
         }
     }
 }
