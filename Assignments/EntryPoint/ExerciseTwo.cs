@@ -18,11 +18,6 @@ namespace EntryPoint
 
         public List<List<Vector2>> Run()
         {
-            foreach (Vector2 specialBuilding in this.SpecialBuildings)
-            {
-                Console.WriteLine(specialBuilding);
-            }
-
             var tree = new KdTree(this.SpecialBuildings);
 
             return this.HousesAndDistances.Select(housesAndDistance => tree.RangeSearch(housesAndDistance.Item1, housesAndDistance.Item2)).ToList();
@@ -36,7 +31,7 @@ namespace EntryPoint
         public KdTree(IReadOnlyList<Vector2> locations)
         {
             // Median as root
-            this.Root = new KdNode(locations[locations.Count / 2]);
+            this.Root = new KdNode(locations[locations.Count / 2], 0);
 
             // Build tree
             foreach (Vector2 location in locations)
@@ -50,7 +45,7 @@ namespace EntryPoint
             // Create new node
             if (node == null)
             {
-                return new KdNode(vector);
+                return new KdNode(vector, depth);
             }
 
             // Prevent double inserts
@@ -71,8 +66,6 @@ namespace EntryPoint
                 value1 = vector.Y;
                 value2 = node.Value.Y;
             }
-
-            node.Depth = depth;
 
             if (value1 <= value2)
             {
@@ -144,9 +137,10 @@ namespace EntryPoint
         public int Depth { get; set; }
         public bool IsLeaf => this.Left == null && this.Right == null;
 
-        public KdNode(Vector2 value)
+        public KdNode(Vector2 value, int depth)
         {
             this.Value = value;
+            this.Depth = depth;
         }
 
         public override string ToString()
