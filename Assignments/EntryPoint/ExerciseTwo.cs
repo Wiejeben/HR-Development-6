@@ -18,11 +18,14 @@ namespace EntryPoint
 
         public List<List<Vector2>> Run()
         {
+            foreach (Vector2 specialBuilding in this.SpecialBuildings)
+            {
+                Console.WriteLine(specialBuilding);
+            }
+
             var tree = new KdTree(this.SpecialBuildings);
 
-            // TODO: Implement range search
-
-            return new List<List<Vector2>>();
+            return this.HousesAndDistances.Select(housesAndDistance => tree.RangeSearch(housesAndDistance.Item1, housesAndDistance.Item2)).ToList();
         }
     }
 
@@ -85,10 +88,52 @@ namespace EntryPoint
             return node;
         }
 
-        public static Vector2[] RangeSearch(Vector2 center, float range)
+        public List<Vector2> RangeSearch(Vector2 center, float range)
         {
-            return new Vector2[] { };
+            var search = new KdSearch(this.Root);
+
+            search.Range(center, range);
+
+            return search.Results;
         }
+    }
+
+    public class KdSearch
+    {
+        public KdNode Root { get; }
+        public List<Vector2> Results { get; }
+
+        public KdSearch(KdNode root)
+        {
+            this.Root = root;
+            this.Results = new List<Vector2>();
+        }
+
+        public void Range(Vector2 center, float range, KdNode node = null)
+        {
+            // Fallback to root
+            node = node ?? this.Root;
+
+            if (node.Left != null)
+            {
+                this.Range(center, range, node.Left);
+            }
+
+            if (node.Right != null)
+            {
+                this.Range(center, range, node.Right);
+            }
+
+            // Check if item is witin squere range
+            if (node.Value.X > center.X - range &&
+                node.Value.X < center.X + range &&
+                node.Value.Y > center.Y - range &&
+                node.Value.Y < center.Y + range)
+            {
+                this.Results.Add(node.Value);
+            }
+        }
+
     }
 
     public class KdNode
