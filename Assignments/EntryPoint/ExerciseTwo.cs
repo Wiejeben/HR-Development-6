@@ -5,39 +5,28 @@ using Microsoft.Xna.Framework;
 
 namespace EntryPoint
 {
-    public class KDNode
+    public class KdTree
     {
-        public KDNode Left { get; set; }
-        public KDNode Right { get; set; }
-        public Vector2 Value { get; set; }
-        public int Depth { get; set; }
-        public bool IsLeaf => this.Left == null && this.Right == null;
+        public KdNode Root { get; }
 
-        public KDNode(Vector2 value)
+        public KdTree(IReadOnlyList<Vector2> locations)
         {
-            this.Value = value;
-        }
-
-        public static KDNode Generate(Vector2[] locations)
-        {
-            // Median as center
-            KDNode tree = new KDNode(locations[locations.Length / 2]);
+            // Median as root
+            this.Root = new KdNode(locations[locations.Count / 2]);
 
             // Build tree
             foreach (Vector2 location in locations)
             {
-                KDNode.Insert(location, tree, 0);
+                this.Insert(location, this.Root, 0);
             }
-
-            return tree;
         }
 
-        public static KDNode Insert(Vector2 vector, KDNode node, int depth)
+        public KdNode Insert(Vector2 vector, KdNode node, int depth)
         {
             // Create new node
             if (node == null)
             {
-                return new KDNode(vector);
+                return new KdNode(vector);
             }
 
             // Prevent double inserts
@@ -47,30 +36,51 @@ namespace EntryPoint
             }
 
             // Even depth
+            // Vertical
             var value1 = vector.X;
             var value2 = node.Value.X;
 
             // Odd depth
             if (depth % 2 == 1)
             {
+                // Horizontal
                 value1 = vector.Y;
                 value2 = node.Value.Y;
             }
 
             node.Depth = depth;
 
-            if (value1 < value2)
+            if (value1 <= value2)
             {
-                // Left or equal
-                node.Left = KDNode.Insert(vector, node.Left, depth + 1);
+                // Smaller or equal
+                node.Left = this.Insert(vector, node.Left, depth + 1);
             }
             else
             {
-                // Larger or equal
-                node.Right = KDNode.Insert(vector, node.Right, depth + 1);
+                // Larger
+                node.Right = this.Insert(vector, node.Right, depth + 1);
             }
 
             return node;
+        }
+
+        public static Vector2[] RangeSearch(Vector2 center, float range)
+        {
+            return new Vector2[] { };
+        }
+    }
+
+    public class KdNode
+    {
+        public KdNode Left { get; set; }
+        public KdNode Right { get; set; }
+        public Vector2 Value { get; set; }
+        public int Depth { get; set; }
+        public bool IsLeaf => this.Left == null && this.Right == null;
+
+        public KdNode(Vector2 value)
+        {
+            this.Value = value;
         }
 
         public override string ToString()
@@ -92,26 +102,10 @@ namespace EntryPoint
 
         public List<List<Vector2>> Run()
         {
-            var tree = KDNode.Generate(this.SpecialBuildings.ToArray());
+            var tree = new KdTree(this.SpecialBuildings);
+            Console.WriteLine("Hello World!");
 
             var results = new List<List<Vector2>>();
-
-            foreach (Tuple<Vector2, float> housesAndDistance in this.HousesAndDistances)
-            {
-                var result = new List<Vector2>();
-                Vector2 center = housesAndDistance.Item1;
-                float distance = housesAndDistance.Item2;
-
-                foreach (Vector2 specialBuilding in this.SpecialBuildings)
-                {
-                    if (ExerciseOne.Distance(center, specialBuilding) <= distance)
-                    {
-                        result.Add(specialBuilding);
-                    }
-                }
-
-                results.Add(result);
-            }
 
             return results;
         }
