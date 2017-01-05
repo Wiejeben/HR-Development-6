@@ -12,13 +12,14 @@ namespace EntryPoint
 		[STAThread]
 		static void Main()
 		{
-			const bool fullscreen = false;
+			const bool fullscreen = true;
 			Console.WriteLine("Which assignment shall run next? (1, 2, 3, 4, or q for quit)");
 
 			var level = Console.ReadLine();
 
 		    switch (level)
 		    {
+		        // Merge sort
 		        case "1":
 		        {
 		            var game = VirtualCity.RunAssignment1(SortSpecialBuildingsByDistance, fullscreen);
@@ -26,6 +27,7 @@ namespace EntryPoint
 		        }
 		            break;
 
+                // KD-tree
 		        case "2":
 		        {
 		            var game = VirtualCity.RunAssignment2(FindSpecialBuildingsWithinDistanceFromHouse, fullscreen);
@@ -33,6 +35,7 @@ namespace EntryPoint
 		        }
 		            break;
 
+		        // Dijkstra algoritm
 		        case "3":
 		        {
 		            var game = VirtualCity.RunAssignment3(FindRoute, fullscreen);
@@ -70,6 +73,10 @@ namespace EntryPoint
 		private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding,
 		  Vector2 destinationBuilding, IEnumerable<Tuple<Vector2, Vector2>> roads)
 		{
+		    var exercise = new ExerciseThree(startingBuilding, destinationBuilding, roads.ToList());
+		    return exercise.Closest();
+//		    var test = new ShortestPath();
+
 			var startingRoad = roads.Where(x => x.Item1.Equals(startingBuilding)).First();
 			List<Tuple<Vector2, Vector2>> fakeBestPath = new List<Tuple<Vector2, Vector2>>() { startingRoad };
 			var prevRoad = startingRoad;
