@@ -22,6 +22,7 @@ namespace EntryPoint
             this.Graph = new int[this.Roads.Count][];
 
             this.BuildAdjacancyMatrix();
+//            this.OutputMatrix();
         }
 
         // For debugging
@@ -143,6 +144,7 @@ public class ShortestPath
         this.Routes = new List<int>[this.Length];
 
         this.Dijkstra(graph, start);
+//        this.PrintSolution();
     }
 
     // A utility function to print the constructed distance array
@@ -204,9 +206,6 @@ public class ShortestPath
                 }
             }
         }
-
-        // print distances array for debug
-//        PrintSolution();
     }
 
     private int MinDistance(IReadOnlyList<bool> processed)
