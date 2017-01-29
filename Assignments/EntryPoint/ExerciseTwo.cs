@@ -18,9 +18,17 @@ namespace EntryPoint
 
         public List<List<Vector2>> Run()
         {
+            // Build tree
             var tree = new KdTree(this.SpecialBuildings);
 
-            return this.HousesAndDistances.Select(housesAndDistance => tree.RangeSearch(housesAndDistance.Item1, housesAndDistance.Item2)).ToList();
+            var results = new List<List<Vector2>>();
+            foreach (Tuple<Vector2, float> housesAndDistance in this.HousesAndDistances)
+            {
+                var result = tree.RangeSearch(housesAndDistance.Item1, housesAndDistance.Item2);
+                results.Add(result);
+            }
+
+            return results;
         }
     }
 
@@ -30,7 +38,7 @@ namespace EntryPoint
 
         public KdTree(IReadOnlyList<Vector2> locations)
         {
-            // Median as root
+            // Median as root (just in case the list is already sorted)
             this.Root = new KdNode(locations[locations.Count / 2], 0);
 
             // Build tree
@@ -43,18 +51,12 @@ namespace EntryPoint
         public KdNode Insert(Vector2 vector, KdNode node, int depth = 0)
         {
             // Create new node
-            if (node == null)
-            {
-                return new KdNode(vector, depth);
-            }
+            if (node == null) return new KdNode(vector, depth);
 
             // Prevent double inserts
-            if (vector == node.Value)
-            {
-                return node;
-            }
+            if (vector == node.Value) return node;
 
-            // Determen axis
+            // Determen X or Y axis
             Tuple<float, float> getSide = KdTree.DeterminAxis(node, vector);
 
             if (getSide.Item1 <= getSide.Item2)
@@ -71,102 +73,19 @@ namespace EntryPoint
             return node;
         }
 
+        // Determen X or Y axis
+        public static Tuple<float, float> DeterminAxis(KdNode node, Vector2 destination)
+        {
+            return node.Depth % 2 == 1
+                ? new Tuple<float, float>(destination.Y, node.Value.Y) // Odd depth
+                : new Tuple<float, float>(destination.X, node.Value.X); // Even depth
+        }
+
         public List<Vector2> RangeSearch(Vector2 center, float range)
         {
             var search = new KdSearch(this.Root);
-
-            search.Range(center, range);
-
-            return search.Results;
+            return search.Range(center, range);
         }
-
-        public static Tuple<float, float> DeterminAxis(KdNode node, Vector2 destination)
-        {
-            // Odd depth
-            if (node.Depth % 2 == 1)
-            {
-                return new Tuple<float, float>(destination.Y, node.Value.Y);
-            }
-
-            // Even depth
-            return new Tuple<float, float>(destination.X, node.Value.X);
-        }
-    }
-
-    public class KdSearch
-    {
-        public KdNode Root { get; }
-        public List<Vector2> Results { get; }
-
-        public KdSearch(KdNode root)
-        {
-            this.Root = root;
-            this.Results = new List<Vector2>();
-        }
-
-        public void Range(Vector2 center, float range, KdNode node = null)
-        {
-            // Fallback to root
-            node = node ?? this.Root;
-
-            // Check if we are inside the range
-            bool inRange = this.InRange(node.Value, center, range);
-
-            // Determen axis
-            Tuple<float, float> determinAxis = KdTree.DeterminAxis(node, center);
-
-            // Go both ways if we are in range
-            if (inRange)
-            {
-                this.GoLeft(center, range, node);
-                this.GoRight(center, range, node);
-            }
-            else
-            {
-                if (determinAxis.Item1 <= determinAxis.Item2)
-                {
-                    this.GoLeft(center, range, node);
-                }
-                else
-                {
-                    this.GoRight(center, range, node);
-                }
-            }
-            
-
-
-            // Apped to final results
-            if (inRange)
-            {
-                this.Results.Add(node.Value);
-            }
-        }
-
-        public void GoLeft(Vector2 center, float range, KdNode node)
-        {
-            if (node.Left != null)
-            {
-                this.Range(center, range, node.Left);
-            }
-        }
-
-        public void GoRight(Vector2 center, float range, KdNode node)
-        {
-            if (node.Right != null)
-            {
-                this.Range(center, range, node.Right);
-            }
-        }
-
-        public bool InRange(Vector2 pos1, Vector2 pos2, float range)
-        {
-            return pos1.X > pos2.X - range &&
-                   pos1.X < pos2.X + range &&
-                   pos1.Y > pos2.Y - range &&
-                   pos1.Y < pos2.Y + range;
-        }
-
-
     }
 
     public class KdNode
@@ -186,6 +105,77 @@ namespace EntryPoint
         public override string ToString()
         {
             return this.Value.ToString();
+        }
+    }
+
+    public class KdSearch
+    {
+        public KdNode Root { get; }
+        private List<Vector2> Results { get; }
+
+        public KdSearch(KdNode root)
+        {
+            this.Root = root;
+            this.Results = new List<Vector2>();
+        }
+
+        public List<Vector2> Range(Vector2 center, float range, KdNode node = null)
+        {
+            // New range search
+            this.Results.Clear();
+            node = node ?? this.Root;
+
+            // Go both ways if we are in range
+            if (this.InRange(node.Value, center, range))
+            {
+                this.GoLeft(center, range, node);
+                this.GoRight(center, range, node);
+
+                this.Results.Add(node.Value);
+                return this.Results;
+            }
+
+            // Determen axis
+            Tuple<float, float> determinAxis = KdTree.DeterminAxis(node, center);
+
+            // Smaller or equal
+            if (determinAxis.Item1 <= determinAxis.Item2)
+            {
+                this.GoLeft(center, range, node);
+            }
+            else
+            {
+                this.GoRight(center, range, node);
+            }
+
+            return this.Results;
+        }
+
+        // Go to left node
+        public void GoLeft(Vector2 center, float range, KdNode node)
+        {
+            if (node.Left != null)
+            {
+                this.Range(center, range, node.Left);
+            }
+        }
+
+        // Go to right node
+        public void GoRight(Vector2 center, float range, KdNode node)
+        {
+            if (node.Right != null)
+            {
+                this.Range(center, range, node.Right);
+            }
+        }
+
+        // Check if given node is in range
+        public bool InRange(Vector2 pos1, Vector2 pos2, float range)
+        {
+            return pos1.X > pos2.X - range &&
+                   pos1.X < pos2.X + range &&
+                   pos1.Y > pos2.Y - range &&
+                   pos1.Y < pos2.Y + range;
         }
     }
 }
