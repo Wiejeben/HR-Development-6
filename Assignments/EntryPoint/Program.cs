@@ -60,7 +60,7 @@ namespace EntryPoint
 		private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
 		{
 		    var exercise = new ExerciseOne<Vector2>(specialBuildings.ToArray());
-		    return exercise.Sort((left, middle) => ExerciseOne.Distance(left, house) >= ExerciseOne.Distance(middle, house));;
+		    return exercise.Sort((left, middle) => Calculate.Distance(left, house) >= Calculate.Distance(middle, house));
 		}
 
 	    // ExerciseTwo
