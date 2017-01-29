@@ -5,14 +5,12 @@ using System.Linq;
 
 namespace EntryPoint
 {
-#if WINDOWS || LINUX
 	public static class Program
 	{
-
 		[STAThread]
-		static void Main()
+		private static void Main()
 		{
-			const bool fullscreen = true;
+			const bool fullscreen = false;
 			Console.WriteLine("Which assignment shall run next? (1, 2, 3, 4, or q for quit)");
 
 			var level = Console.ReadLine();
@@ -27,7 +25,7 @@ namespace EntryPoint
 		        }
 		            break;
 
-                // KD-tree
+		        // KD-tree
 		        case "2":
 		        {
 		            var game = VirtualCity.RunAssignment2(FindSpecialBuildingsWithinDistanceFromHouse, fullscreen);
@@ -49,15 +47,20 @@ namespace EntryPoint
 		            game.Run();
 		        }
 		            break;
+
+		        default:
+		        {
+                    Console.WriteLine("Unknown assignment");
+		        }
+		            break;
 		    }
 		}
 
 	    // ExerciseOne
 		private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
 		{
-		    Vector2[] sortedBuildings = new ExerciseOne<Vector2>(specialBuildings.ToArray()).Sort((left, middle) => ExerciseOne.Distance(left, house) >= ExerciseOne.Distance(middle, house));
-
-		    return sortedBuildings;
+		    var exercise = new ExerciseOne<Vector2>(specialBuildings.ToArray());
+		    return exercise.Sort((left, middle) => ExerciseOne.Distance(left, house) >= ExerciseOne.Distance(middle, house));;
 		}
 
 	    // ExerciseTwo
@@ -65,32 +68,22 @@ namespace EntryPoint
 		  IEnumerable<Vector2> specialBuildings,
 		  IEnumerable<Tuple<Vector2, float>> housesAndDistances)
 		{
-		    ExerciseTwo exercice = new ExerciseTwo(specialBuildings, housesAndDistances);
-
+		    var exercice = new ExerciseTwo(specialBuildings, housesAndDistances);
 		    return exercice.Run();
 		}
 
+	    // ExerciseThree
 		private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding,
 		  Vector2 destinationBuilding, IEnumerable<Tuple<Vector2, Vector2>> roads)
 		{
 		    var exercise = new ExerciseThree(startingBuilding, destinationBuilding, roads.ToList());
 		    return exercise.Closest();
-//		    var test = new ShortestPath();
-
-			var startingRoad = roads.Where(x => x.Item1.Equals(startingBuilding)).First();
-			List<Tuple<Vector2, Vector2>> fakeBestPath = new List<Tuple<Vector2, Vector2>>() { startingRoad };
-			var prevRoad = startingRoad;
-			for (int i = 0; i < 30; i++)
-			{
-				prevRoad = (roads.Where(x => x.Item1.Equals(prevRoad.Item2)).OrderBy(x => Vector2.Distance(x.Item2, destinationBuilding)).First());
-				fakeBestPath.Add(prevRoad);
-			}
-			return fakeBestPath;
 		}
 
 		private static IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>> FindRoutesToAll(Vector2 startingBuilding,
 		  IEnumerable<Vector2> destinationBuildings, IEnumerable<Tuple<Vector2, Vector2>> roads)
 		{
+		    Console.WriteLine("Not implemented");
 			List<List<Tuple<Vector2, Vector2>>> result = new List<List<Tuple<Vector2, Vector2>>>();
 			foreach (var d in destinationBuildings)
 			{
@@ -107,5 +100,4 @@ namespace EntryPoint
 			return result;
 		}
 	}
-#endif
 }
