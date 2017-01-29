@@ -55,7 +55,7 @@ namespace EntryPoint
         {
             middle++;
 
-            while (left <= middle && middle <= right)
+            if (left <= middle && middle <= right)
             {
                 // left >= middle
                 if (this.ValueValculator(this.Values[left], this.Values[middle]))
@@ -65,6 +65,8 @@ namespace EntryPoint
                 }
 
                 left++;
+
+                this.Merge(left, middle, right);
             }
         }
 
