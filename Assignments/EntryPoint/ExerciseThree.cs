@@ -179,9 +179,7 @@ public class ShortestPath
         // Find shortest path for all vertices
         for (int count = 0; count < this.Length - 1; count++)
         {
-            // Pick the minimum distance vertex from the set of vertices
-            // not yet processed. u is always equal to start in first
-            // iteration.
+            // Pick the minimum distance vertex from the set of vertices not yet processed. u is always equal to start in first iteration.
             int u = this.MinDistance(processed);
 
             // Mark the picked vertex as processed
@@ -190,9 +188,7 @@ public class ShortestPath
             // Update dist value of the adjacent vertices of the picked vertex.
             for (int i = 0; i < this.Length; i++)
             {
-                // Update distances[i] only if is not in processed, there is an
-                // edge from u to i, and total weight of path from start to
-                // i through u is smaller than current value of distances[i]
+                // Update distances[i] only if is not in processed, there is an edge from u to i, and total weight of path from start to i through u is smaller than current value of distances[i]
                 if (!processed[i] && graph[u][i] != 0 &&
                     this.Distances[u] != int.MaxValue &&
                     this.Distances[u] + graph[u][i] < this.Distances[i])
