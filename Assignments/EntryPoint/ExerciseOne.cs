@@ -19,14 +19,20 @@ namespace EntryPoint
         public T[] Values;
         public Func<T, T, bool> ValueValculator;
 
-        public ExerciseOne(T[] list)
+        public ExerciseOne(T[] array)
         {
-            this.Values = list;
+            this.Values = array;
         }
 
         // Define value calculator and execute MergeSort
         public T[] Sort(Func<T, T, bool> valueCalculator)
         {
+            // We cannot sort a list with a length of one
+            if (this.Values.Length <= 1)
+            {
+                return this.Values;
+            }
+
             this.ValueValculator = valueCalculator;
             return this.MergeSort(0, this.Values.Length - 1);
         }
